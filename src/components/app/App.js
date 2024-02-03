@@ -1,3 +1,4 @@
+import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { AdvertPage, AdvertsPage, NewAdvertPage } from '../adverts';
@@ -5,15 +6,37 @@ import { LoginPage, RequireAuth } from '../auth';
 import NotFoundPage from './NotFoundPage';
 import Layout from '../layout';
 
+import { useDispatch } from 'react-redux';
+import { authLoginSuccess } from '../../store/action';
+
 function App() {
+  const dispatch = useDispatch();
+
+  const isAuthenticated = React.useSelector(state => state.user.isAuthenticated);
+
+  React.useEffect(() => {
+    // Leer el token del LocalStorage al iniciar la aplicación
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      // Si el token existe, marcar al usuario como autenticado
+      dispatch(authLoginSuccess());
+    }
+  }, [dispatch]);
+
+
   return (
     <Routes>
       <Route
         path="/adverts"
         element={
+          isAuthenticated ? (
           <RequireAuth>
             <Layout />
           </RequireAuth>
+          ) : (
+            <Navigate to="/login" /> // Redirige al inicio de sesión si no está autenticado
+          )
         }
       >
         <Route index element={<AdvertsPage />} />

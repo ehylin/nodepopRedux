@@ -13,6 +13,7 @@ function LoginPage() {
   const { isLoading, error, execute, resetError } = useMutation(login);
 
   const handleSubmit = credentials => {
+    console.log(credentials)
     execute(credentials)
       .then(handleLogin)
       .then(() => {

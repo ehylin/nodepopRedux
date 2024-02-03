@@ -20,8 +20,9 @@ function LoginForm({ onSubmit, isLoading }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input name="email" value={email} onChange={handleChange} />
+      <input name="email" placeholder='email' value={email} onChange={handleChange} />
       <input
+      placeholder='password'
         type="password"
         name="password"
         value={password}
