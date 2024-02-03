@@ -1,33 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../context';
-import { login } from '../service';
+import { authLogin } from '../../../store/action'; // Asegúrate de importar la acción de inicio de sesión adecuada
 import LoginForm from './LoginForm';
-import useMutation from '../../../hooks/useMutation';
 
 function LoginPage() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { handleLogin } = useAuth();
-  const { isLoading, error, execute, resetError } = useMutation(login);
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const isLoading = useSelector(state => state.auth.isLoading);
+  const error = useSelector(state => state.auth.error);
 
-  const handleSubmit = credentials => {
-    console.log(credentials)
-    execute(credentials)
-      .then(handleLogin)
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
+
+  const handleSubmit = () => {
+    // Realizar la llamada a la acción de inicio de sesión en Redux
+    dispatch(authLogin(credentials))
       .then(() => {
-        const from = location.state?.from?.pathname || '/';
-        navigate(from);
+        if (isAuthenticated) {
+          const from = location.state?.from?.pathname || '/';
+          navigate(from);
+        }
       });
+  };
+
+  const handleInputChange = e => {
+    const { name, value } = e.target;
+    setCredentials(prevCredentials => ({
+      ...prevCredentials,
+      [name]: value,
+    }));
   };
 
   return (
     <div>
-      <LoginForm onSubmit={handleSubmit} isLoading={isLoading} />
+      <LoginForm
+        onSubmit={handleSubmit}
+        isLoading={isLoading}
+        credentials={credentials}
+        onInputChange={handleInputChange}
+      />
       {isLoading && <p>...login in nodepop</p>}
       {error && (
-        <div onClick={resetError} style={{ color: 'red' }}>
+        <div style={{ color: 'red' }}>
           {error.message}
         </div>
       )}

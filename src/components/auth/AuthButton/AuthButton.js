@@ -1,29 +1,40 @@
+import { connect } from 'react-redux';
+
 import { Link } from 'react-router-dom';
+import Button from '../../../components/shared/Button';
 
-import { ConfirmationButton } from '../../common';
+
 import { logout } from '../service';
-import useMutation from '../../../hooks/useMutation';
-import { useAuth } from '../context';
+import { authLogout } from '../../../store/action';
 
-const AuthButton = () => {
-  const { isLogged, handleLogout } = useAuth();
-  const mutation = useMutation(logout);
 
-  const handleLogoutConfirm = async () => {
-    await mutation.execute();
-    handleLogout();
+function AuthButton({ className, onLogout, isLogged }) {
+  
+
+
+  const handleLogoutClick = async () => {
+    await logout();
+    onLogout();
   };
-
   return isLogged ? (
-    <ConfirmationButton
-      confirmation="Are you sure?"
-      onConfirm={handleLogoutConfirm}
-    >
+    <Button onClick={handleLogoutClick} className={className}>
       Logout
-    </ConfirmationButton>
+    </Button>
   ) : (
-    <Link to="/login">Login</Link>
+    <Button as={Link} to="/login" $variant="primary" className={className}>
+      Login
+    </Button>
   );
+}
+
+
+const mapStateToProps = (state) => ({
+  isLogged: state.auth.isAuthenticated,
+});
+
+const mapDispatchToProps = {
+  onLogout: authLogout,
 };
 
-export default AuthButton;
+
+export default connect(mapStateToProps, mapDispatchToProps)(AuthButton);

@@ -9,7 +9,7 @@ import {
   } from './types';
 
   const initialState = {
-    user: {
+    auth: {
       isAuthenticated: false,
       accessToken: null,
       rememberSession: false,
@@ -22,7 +22,7 @@ import {
   };
   
 
-  export function auth(state = initialState.user, action) {
+  export function auth(state = initialState.auth, action) {
     switch (action.type) {
       case AUTH_LOGIN_SUCCESS:
         return true;

@@ -1,23 +1,30 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter as Router } from 'react-router-dom';
+import ReactDOM from 'react-dom/client';
 
-import { configureClient } from './api/client';
-import storage from './utils/storage';
 import './index.css';
-import App from './components/app';
-import { AuthProvider } from './components/auth/context';
+import App from './components/app/App';
+import storage from './utils/storage';
+import { setAuthorizationHeader } from './api/client';
+import ErrorBoundary from './components/error/ErrorBoundary';
+
+import configureStore from './store';
+import Root from './Root';
+import { createBrowserRouter } from 'react-router-dom';
 
 const accessToken = storage.get('auth');
-configureClient({ accessToken });
+if (accessToken) {
+  setAuthorizationHeader(accessToken);
+}
 
-const root = createRoot(document.getElementById('root'));
+const router = createBrowserRouter([{ path: '*', element: <App /> }]);
+
+const store = configureStore({ auth: !!accessToken }, { router });
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Router>
-      <AuthProvider isInitiallyLogged={!!accessToken}>
-        <App />
-      </AuthProvider>
-    </Router>
+    <ErrorBoundary>
+      <Root store={store} router={router} />
+    </ErrorBoundary>
   </React.StrictMode>,
 );

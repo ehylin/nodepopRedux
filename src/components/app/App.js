@@ -1,4 +1,5 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { AdvertPage, AdvertsPage, NewAdvertPage } from '../adverts';
@@ -6,13 +7,13 @@ import { LoginPage, RequireAuth } from '../auth';
 import NotFoundPage from './NotFoundPage';
 import Layout from '../layout';
 
-import { useDispatch } from 'react-redux';
+
 import { authLoginSuccess } from '../../store/action';
 
 function App() {
   const dispatch = useDispatch();
 
-  const isAuthenticated = React.useSelector(state => state.user.isAuthenticated);
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
   React.useEffect(() => {
     // Leer el token del LocalStorage al iniciar la aplicación

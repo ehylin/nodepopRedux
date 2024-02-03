@@ -1,14 +1,18 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { withExtraArgument } from 'redux-thunk';
-import { composeWithDevTools } from '@redux-devtools/extension';
+//import { composeWithDevTools } from '@redux-devtools/extension';
 
 import * as reducers from './reducers';
-import * as actionCreators from './action';
+//import * as actionCreators from './action';
 
 import * as adverts from '../components/adverts/service';
 import * as auth from '../components/auth/service';
 
-const composeEnhancers = composeWithDevTools({ actionCreators });
+//const composeEnhancers = composeWithDevTools({ actionCreators });
+
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 
 const logger = store => next => action => {
   console.group(action.type);
@@ -85,8 +89,6 @@ export default function configureStore(preloadedState, { router }) {
     combineReducers(reducers),
     preloadedState,
     composeEnhancers(applyMiddleware(...middleware), historyEnhancer),
-     window.__REDUX_DEVTOOLS_EXTENSION__ &&
-       window.__REDUX_DEVTOOLS_EXTENSION__(),
   );
   return store;
 }

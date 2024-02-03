@@ -6,11 +6,11 @@ const client = axios.create({
 
 console.log(process.env.REACT_APP_API_BASE_URL)
 
-const setAuthorizationHeader = token => {
+export const setAuthorizationHeader = token => {
   client.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 };
 
-const removeAuthorizationHeader = () => {
+export const removeAuthorizationHeader = () => {
   delete client.defaults.headers.common['Authorization'];
 };
 
