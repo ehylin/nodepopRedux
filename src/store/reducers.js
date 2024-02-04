@@ -19,6 +19,7 @@ import {
       list: [],
       selectedAdvert: null,
     },
+    isElementClicked: false,
   };
   
 
@@ -47,6 +48,18 @@ import {
         return {
           ...state,
           list: state.list.filter((advert) => advert.id !== action.payload),
+        };
+      default:
+        return state;
+    }
+  };
+
+  export const someReducer = (state = initialState.isElementClicked, action) => {
+    switch (action.type) {
+      case 'CLICK_ELEMENT':
+        return {
+          ...state,
+          isElementClicked: true,
         };
       default:
         return state;

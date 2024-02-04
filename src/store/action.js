@@ -21,6 +21,12 @@ import {
   SET_DELETE_ADVERTS_FAILURE
 } from './types';
 
+
+export const clickElement = () => ({
+  type: 'CLICK_ELEMENT',
+});
+
+
 export const authLoginRequest = () => ({
     type: AUTH_LOGIN_REQUEST,
   });
