@@ -6,7 +6,7 @@ import Footer from './Footer';
 function Layout() {
   return (
     <>
-      <Header />
+      <Header title='Nodepop' list='Adverts' />
       <main>
         <Outlet />
       </main>

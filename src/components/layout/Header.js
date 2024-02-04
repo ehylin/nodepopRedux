@@ -5,7 +5,7 @@ import './Header.css';
 
 const isSelected = ({ isActive }) => (isActive ? 'selected' : '');
 
-function Header() {
+function Header(props) {
   return (
     <header>
       Nodepop React
@@ -13,12 +13,12 @@ function Header() {
         <ul>
           <li>
             <NavLink to="/adverts" className={isSelected} end>
-              Nodepop
+             {props.title}
             </NavLink>
           </li>
           <li>
             <NavLink to="/adverts/new" className={isSelected}>
-              New advert
+            {props.list}
             </NavLink>
           </li>
         </ul>

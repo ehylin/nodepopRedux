@@ -8,7 +8,7 @@ import {
     SET_DELETE_ADVERTS_SUCCESS,
   } from './types';
 
-  const initialState = {
+  export const initialState = {
     auth: {
       isAuthenticated: false,
       accessToken: null,
