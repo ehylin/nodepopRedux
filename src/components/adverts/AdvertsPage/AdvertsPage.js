@@ -8,18 +8,31 @@ import { getAdverts } from '../service';
 import { defaultFilters, filterAdverts } from './filters';
 import useQuery from '../../../hooks/useQuery';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { setAdverts } from '../../../store/action'; 
+import { getAdverts as selectAdverts } from '../../../store/selector'; 
+
 const getFilters = () => storage.get('filters') || defaultFilters;
 const saveFilters = filters => storage.set('filters', filters);
 
 function AdvertsPage() {
+  const dispatch = useDispatch();
+  const advertsFromRedux = useSelector(selectAdverts); 
+
   const [filters, setFilters] = useState(getFilters);
-  const { isLoading, data: adverts = [] } = useQuery(getAdverts);
 
   useEffect(() => {
     saveFilters(filters);
   }, [filters]);
 
-  const filteredAdverts = filterAdverts(adverts, filters);
+  useEffect(() => {
+    // Usa la acción "setAdverts" para almacenar los anuncios en el estado de Redux
+    dispatch(setAdverts(advertsFromRedux));
+  }, [dispatch, advertsFromRedux]); 
+
+  const { isLoading, data: advertsFromQuery = [] } = useQuery(getAdverts); 
+
+  const filteredAdverts = filterAdverts(advertsFromQuery, filters); 
 
   if (isLoading) {
     return 'Loading...';
@@ -27,18 +40,18 @@ function AdvertsPage() {
 
   return (
     <>
-      {adverts.length > 0 && (
+      {advertsFromQuery.length > 0 && (
         <FiltersForm
           initialFilters={filters}
           defaultFilters={defaultFilters}
-          prices={adverts.map(({ price }) => price)}
+          prices={advertsFromQuery.map(({ price }) => price)}
           onFilter={setFilters}
         />
       )}
       {filteredAdverts.length ? (
         <AdvertsList adverts={filteredAdverts} />
       ) : (
-        <EmptyList advertsCount={adverts.length} />
+        <EmptyList advertsCount={advertsFromQuery.length} />
       )}
     </>
   );
